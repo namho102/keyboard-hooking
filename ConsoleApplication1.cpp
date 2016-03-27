@@ -9,32 +9,44 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 	
 	//	cout << wParam << endl;
 //	cout << lParam << endl;
-	
-	
-	BOOL fEatKeystroke = FALSE;
+	int cap = 0;
+	//char c;
 
 	if ((nCode == HC_ACTION)) { //It's always true???
-
-		//cout<<wParam<<endl;
 
 		if (wParam == WM_SYSKEYUP) {
 			cout << "SystemKey up" << endl;
 		} else if (wParam == WM_KEYUP) {
 			//cout << "Key up" << endl;
+
 			PKBDLLHOOKSTRUCT p = (PKBDLLHOOKSTRUCT)lParam;
 
-			switch (p->vkCode)
-				case VK_RETURN: cout << " -enter" << endl;
+			switch (p->vkCode) {
+				case VK_RETURN: cout << endl; break;
+			 	//case VK_CAPITAL: cout << " -caps lock" << endl; break;
+								
+			}
+			if (p->vkCode != VK_CAPITAL) {
+				char c = p->vkCode;
+
+				if ((GetKeyState(VK_CAPITAL) & 0x0001) != 0) {
+					cout << c;
+				}
+
+				else {
+					c = tolower(c);
+					cout << c;
+				}
+			}
 			
-			//cout << p->vkCode << endl;
-			char c = p->vkCode;
-			//cout << c << endl;
-			//cout << toascii(p->vkCode)<<endl;
-			cout << c;
+
 		}
 	}
 	
-	return(fEatKeystroke ? 1 : CallNextHookEx(NULL, nCode, wParam, lParam));;
+	
+
+	return CallNextHookEx(NULL, nCode, wParam, lParam);
+
 }
 
 
